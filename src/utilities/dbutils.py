@@ -24,11 +24,16 @@ class DButils:
             print(e)
             raise e
 
-    def insert_query(self, query, values, auto_commit=True):
+    def insert_query(self, table,columns, values, auto_commit=True):
         cursor = self.conn.cursor()
         try:
+            columns_str = ', '.join(columns)
+            placeholders = ', '.join(['%s'] * len(values))
+            query = f"INSERT INTO {table} ({columns_str}) VALUES ({placeholders})"
             cursor.execute(query,values)
-            self.conn.commit()
+            if auto_commit:
+                self.conn.commit()
+                # Close the cursor
             cursor.close()
         except Exception as e:
             raise
