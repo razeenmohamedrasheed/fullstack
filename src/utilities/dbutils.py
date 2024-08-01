@@ -17,9 +17,11 @@ class DButils:
             cursor = self.conn.cursor()
             query = f"""SELECT * FROM {table}"""
             cursor.execute(query)
+            columns = [desc[0] for desc in cursor.description]
             rows = cursor.fetchall()
             cursor.close()
-            return rows
+            result = [dict(zip(columns, row)) for row in rows]
+            return result
         except Exception as e:
             print(e)
             raise e
