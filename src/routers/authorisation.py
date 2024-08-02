@@ -2,7 +2,7 @@ from fastapi import APIRouter,status
 from src.utilities.dbutils import DButils
 from src.models.registration import Registration
 from passlib.context import CryptContext
-import uuid
+
 
 router = APIRouter(
     tags=["Authorisation"]
@@ -15,12 +15,11 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 def userSignup(request: Registration):
     try:
         db = DButils()
-        user_id = int(uuid.uuid4()) % 10000
-        columns = ['student_id', 'username', 'email', 'contact', 'password', 'course_id', 'user_role_id']
-        columns2 = ['teacher_id', 'username', 'email', 'contact', 'password', 'course_id', 'user_role_id']
+        columns = ['username', 'email', 'contact', 'password', 'course_id', 'user_role_id']
+        columns2 = ['username', 'email', 'contact', 'password', 'course_id', 'user_role_id']
         hashed_password = pwd_context.hash(request.password)
         values = (
-            user_id, request.username,
+            request.username,
             request.email,
             request.contact,
             hashed_password,
